@@ -1,0 +1,91 @@
+@startuml Aura_Retail_OS_Class_Diagram_Part1_Core_Events
+title Aura Retail OS - Class Diagram (Part 1: Core & Events)
+' Design Patterns: Singleton, Observer
+
+skinparam monochrome false
+skinparam defaultFontName "Arial"
+skinparam classAttributeIconSize 0
+hide circle
+
+' ==================== SINGLETON PATTERN ====================
+package "core.singleton" {
+    class CentralRegistry {
+        - static instance : CentralRegistry
+        - config : Map<String, Object>
+        - status : String
+        + static getInstance() : CentralRegistry
+        + getConfig(key : String) : Object
+        + setConfig(key : String, value : Object) : void
+        + getStatus() : String
+        + setStatus(status : String) : void
+    }
+}
+
+' ==================== OBSERVER PATTERN ====================
+package "core.observer" {
+    interface EventListener {
+        + onEvent(event : SystemEvent) : void
+    }
+
+    interface SystemEvent {
+        + getEventType() : String
+        + getPriority() : EventPriority
+        + getTimestamp() : long
+    }
+
+    enum EventPriority {
+        LOW
+        NORMAL
+        HIGH
+        CRITICAL
+    }
+
+    class EventBus {
+        - listeners : Map<EventPriority, List<EventListener>>
+        + subscribe(listener : EventListener, priority : EventPriority) : void
+        + publish(event : SystemEvent) : void
+    }
+
+    class LowStockEvent {
+        - productId : String
+        - currentStock : int
+        - threshold : int
+        + getProductId() : String
+        + getCurrentStock() : int
+        + getThreshold() : int
+    }
+
+    class HardwareFailureEvent {
+        - hardwareId : String
+        - failureType : String
+        - severity : String
+        + getHardwareId() : String
+        + getFailureType() : String
+        + getSeverity() : String
+    }
+
+    class EmergencyModeActivated {
+        - reason : String
+        - timestamp : long
+        + getReason() : String
+    }
+}
+
+CentralRegistry ..> CentralRegistry : Singleton Instance
+EventBus o-- EventListener : notifies
+EventBus o-- SystemEvent : publishes
+LowStockEvent --|> SystemEvent : implements
+HardwareFailureEvent --|> SystemEvent : implements
+EmergencyModeActivated --|> SystemEvent : implements
+
+note top of CentralRegistry
+  Design Pattern: Singleton
+  Thread-safe global configuration
+end note
+
+note top of EventBus
+  Design Pattern: Observer
+  Priority-based event distribution
+end note
+
+@enduml

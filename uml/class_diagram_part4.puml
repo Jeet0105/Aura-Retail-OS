@@ -1,0 +1,175 @@
+@startuml Aura_Retail_OS_Class_Diagram_Part4_Factory_Facade
+title Aura Retail OS - Class Diagram (Part 4: Factory & Facade)
+' Design Patterns: Abstract Factory, Facade
+
+skinparam monochrome false
+skinparam defaultFontName "Arial"
+skinparam classAttributeIconSize 0
+hide circle
+
+' ==================== ABSTRACT FACTORY ====================
+package "factory" {
+    interface KioskFactory {
+        + createDispenser() : Dispenser
+        + createVerificationModule() : VerificationModule
+        + createInventoryPolicy() : InventoryPolicy
+        + getKioskType() : String
+    }
+
+    class PharmacyKioskFactory {
+        + createDispenser() : Dispenser
+        + createVerificationModule() : VerificationModule
+        + createInventoryPolicy() : InventoryPolicy
+        + getKioskType() : String
+    }
+
+    class FoodKioskFactory {
+        + createDispenser() : Dispenser
+        + createVerificationModule() : VerificationModule
+        + createInventoryPolicy() : InventoryPolicy
+        + getKioskType() : String
+    }
+
+    class EmergencyReliefKioskFactory {
+        + createDispenser() : Dispenser
+        + createVerificationModule() : VerificationModule
+        + createInventoryPolicy() : InventoryPolicy
+        + getKioskType() : String
+    }
+
+    abstract class Dispenser {
+        # dispenserId : String
+        # isOperational : boolean
+        + dispense(productId : String, quantity : int) : boolean
+        + recalibrate() : boolean
+        + runDiagnostics() : String
+        + getDispenserId() : String
+        + isOperational() : boolean
+    }
+
+    abstract class VerificationModule {
+        # moduleId : String
+        + verifyUser(userId : String) : boolean
+        + verifyProduct(productId : String) : boolean
+        + runDiagnostics() : String
+    }
+
+    abstract class InventoryPolicy {
+        # policyName : String
+        + canDispense(productId : String, quantity : int, currentStock : int) : boolean
+        + getPolicyName() : String
+    }
+
+    class PharmacyDispenser {
+        + dispense(productId : String, quantity : int) : boolean
+        + recalibrate() : boolean
+        + runDiagnostics() : String
+    }
+
+    class FoodDispenser {
+        + dispense(productId : String, quantity : int) : boolean
+        + recalibrate() : boolean
+        + runDiagnostics() : String
+    }
+
+    class EmergencyDispenser {
+        + dispense(productId : String, quantity : int) : boolean
+        + recalibrate() : boolean
+        + runDiagnostics() : String
+    }
+
+    class PharmacyVerification {
+        + verifyUser(userId : String) : boolean
+        + verifyProduct(productId : String) : boolean
+        + runDiagnostics() : String
+    }
+
+    class FoodVerification {
+        + verifyUser(userId : String) : boolean
+        + verifyProduct(productId : String) : boolean
+        + runDiagnostics() : String
+    }
+
+    class EmergencyVerification {
+        + verifyUser(userId : String) : boolean
+        + verifyProduct(productId : String) : boolean
+        + runDiagnostics() : String
+    }
+
+    class PharmacyInventoryPolicy {
+        + canDispense(productId : String, quantity : int, currentStock : int) : boolean
+        + getPolicyName() : String
+    }
+
+    class FoodInventoryPolicy {
+        + canDispense(productId : String, quantity : int, currentStock : int) : boolean
+        + getPolicyName() : String
+    }
+
+    class EmergencyRationInventoryPolicy {
+        - maxItemsPerTransaction : int
+        + canDispense(productId : String, quantity : int, currentStock : int) : boolean
+        + getPolicyName() : String
+    }
+}
+
+KioskFactory <|.. PharmacyKioskFactory : implements
+KioskFactory <|.. FoodKioskFactory : implements
+KioskFactory <|.. EmergencyReliefKioskFactory : implements
+Dispenser <|-- PharmacyDispenser : extends
+Dispenser <|-- FoodDispenser : extends
+Dispenser <|-- EmergencyDispenser : extends
+VerificationModule <|-- PharmacyVerification : extends
+VerificationModule <|-- FoodVerification : extends
+VerificationModule <|-- EmergencyVerification : extends
+InventoryPolicy <|-- PharmacyInventoryPolicy : extends
+InventoryPolicy <|-- FoodInventoryPolicy : extends
+InventoryPolicy <|-- EmergencyRationInventoryPolicy : extends
+
+note top of KioskFactory
+  Design Pattern: Abstract Factory
+  Creates families of related components
+end note
+
+' ==================== FACADE ====================
+package "facade" {
+    class KioskInterface {
+        - kioskId : String
+        - factory : KioskFactory
+        - inventoryManager : InventoryManager
+        - pricingContext : PricingContext
+        - stateContext : KioskContext
+        - failureChain : FailureHandler
+        - hardwareOperational : boolean
+        - networkConnected : boolean
+        + purchaseItem(userId : String, productId : String, quantity : int) : boolean
+        + refundTransaction(transactionId : String) : boolean
+        + runDiagnostics() : String
+        + restockInventory(productId : String, quantity : int) : boolean
+        + activateEmergencyMode(reason : String) : void
+        + setHardwareStatus(operational : boolean) : void
+        + setNetworkStatus(connected : boolean) : void
+    }
+}
+
+note top of KioskInterface
+  Design Pattern: Facade
+  Simplified interface to complex subsystem
+end note
+
+' ==================== PERSISTENCE ====================
+package "persistence" {
+    class PersistenceManager {
+        - configFilePath : String
+        - transactionFilePath : String
+        - inventoryFilePath : String
+        + saveConfig(config : Map<String, Object>) : boolean
+        + loadConfig() : Map<String, Object>
+        + saveTransactions(transactions : List<String>) : boolean
+        + loadTransactions() : List<String>
+        + saveInventory(snapshot : InventoryState) : boolean
+        + loadInventorySnapshot() : InventoryState
+    }
+}
+
+@enduml

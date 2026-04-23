@@ -1,0 +1,123 @@
+@startuml Aura_Retail_OS_Class_Diagram_Part2_State_Strategy
+title Aura Retail OS - Class Diagram (Part 2: State & Strategy)
+' Design Patterns: State, Strategy
+
+skinparam monochrome false
+skinparam defaultFontName "Arial"
+skinparam classAttributeIconSize 0
+hide circle
+
+' ==================== STATE PATTERN ====================
+package "state" {
+    interface KioskState {
+        + enter(context : KioskContext) : void
+        + exit(context : KioskContext) : void
+        + canPurchase(context : KioskContext) : boolean
+        + getStateName() : String
+    }
+
+    class KioskContext {
+        - currentState : KioskState
+        - stateHistory : List<KioskState>
+        + setState(state : KioskState) : void
+        + getCurrentState() : KioskState
+        + getCurrentStateInfo() : String
+        + canPurchase() : boolean
+    }
+
+    class ActiveMode {
+        + enter(context : KioskContext) : void
+        + exit(context : KioskContext) : void
+        + canPurchase(context : KioskContext) : boolean
+        + getStateName() : String
+    }
+
+    class PowerSavingMode {
+        + enter(context : KioskContext) : void
+        + exit(context : KioskContext) : void
+        + canPurchase(context : KioskContext) : boolean
+        + getStateName() : String
+    }
+
+    class MaintenanceMode {
+        + enter(context : KioskContext) : void
+        + exit(context : KioskContext) : void
+        + canPurchase(context : KioskContext) : boolean
+        + getStateName() : String
+    }
+
+    class EmergencyLockdownMode {
+        + enter(context : KioskContext) : void
+        + exit(context : KioskContext) : void
+        + canPurchase(context : KioskContext) : boolean
+        + getStateName() : String
+    }
+}
+
+KioskContext o-- KioskState : current state
+ActiveMode --|> KioskState : implements
+PowerSavingMode --|> KioskState : implements
+MaintenanceMode --|> KioskState : implements
+EmergencyLockdownMode --|> KioskState : implements
+
+note top of KioskState
+  Design Pattern: State
+  Encapsulates state-specific behavior
+end note
+
+note top of KioskContext
+  Design Pattern: State Context
+  Manages state transitions
+end note
+
+' ==================== STRATEGY PATTERN ====================
+package "strategy" {
+    interface PricingStrategy {
+        + calculatePrice(basePrice : double, context : PricingContext) : double
+        + getStrategyName() : String
+    }
+
+    class PricingContext {
+        - currentStrategy : PricingStrategy
+        - kioskType : String
+        - operationalMode : String
+        + setStrategy(strategy : PricingStrategy) : void
+        + executePricing(basePrice : double) : double
+        + getKioskType() : String
+        + getOperationalMode() : String
+    }
+
+    class StandardPricing {
+        + calculatePrice(basePrice : double, context : PricingContext) : double
+        + getStrategyName() : String
+    }
+
+    class DiscountedPricing {
+        - discountPercent : double
+        + calculatePrice(basePrice : double, context : PricingContext) : double
+        + getStrategyName() : String
+    }
+
+    class EmergencyPricing {
+        - maxItems : int
+        + calculatePrice(basePrice : double, context : PricingContext) : double
+        + getStrategyName() : String
+    }
+}
+
+PricingContext o-- PricingStrategy : current strategy
+StandardPricing --|> PricingStrategy : implements
+DiscountedPricing --|> PricingStrategy : implements
+EmergencyPricing --|> PricingStrategy : implements
+
+note top of PricingStrategy
+  Design Pattern: Strategy
+  Interchangeable pricing algorithms
+end note
+
+note top of PricingContext
+  Design Pattern: Strategy Context
+  Delegates to current strategy
+end note
+
+@enduml

@@ -1,0 +1,144 @@
+@startuml Aura_Retail_OS_Class_Diagram_Part3_Command_Memento_Chain
+title Aura Retail OS - Class Diagram (Part 3: Command, Memento & Chain)
+' Design Patterns: Command, Memento, Chain of Responsibility
+
+skinparam monochrome false
+skinparam defaultFontName "Arial"
+skinparam classAttributeIconSize 0
+hide circle
+
+' ==================== COMMAND PATTERN ====================
+package "command" {
+    interface TransactionCommand {
+        + execute() : boolean
+        + undo() : void
+        + getCommandName() : String
+    }
+
+    class PurchaseItemCommand {
+        - inventoryManager : InventoryManager
+        - userId : String
+        - productId : String
+        - quantity : int
+        - price : double
+        - savedState : InventoryState
+        + execute() : boolean
+        + undo() : void
+        + getCommandName() : String
+        + saveState() : void
+        + restoreState() : void
+    }
+
+    class RefundCommand {
+        - inventoryManager : InventoryManager
+        - transactionId : String
+        - productId : String
+        - quantity : int
+        - refundAmount : double
+        + execute() : boolean
+        + undo() : void
+        + getCommandName() : String
+    }
+
+    class RestockCommand {
+        - inventoryManager : InventoryManager
+        - productId : String
+        - quantity : int
+        + execute() : boolean
+        + undo() : void
+        + getCommandName() : String
+    }
+}
+
+TransactionCommand <|.. PurchaseItemCommand : implements
+TransactionCommand <|.. RefundCommand : implements
+TransactionCommand <|.. RestockCommand : implements
+
+note top of TransactionCommand
+  Design Pattern: Command
+  Encapsulates requests as objects
+end note
+
+note top of PurchaseItemCommand
+  Design Pattern: Command + Memento
+  Supports execution and rollback
+end note
+
+' ==================== MEMENTO PATTERN ====================
+package "memento" {
+    class InventoryManager {
+        - stock : Map<String, Integer>
+        - reservedStock : Map<String, Integer>
+        - unavailableStock : Map<String, Integer>
+        + getStock(productId : String) : int
+        + getAvailableStock(productId : String) : int
+        + reserveStock(productId : String, quantity : int) : boolean
+        + confirmReservation(productId : String, quantity : int) : void
+        + releaseReservation(productId : String, quantity : int) : void
+        + markUnavailable(productId : String, quantity : int) : void
+        + restoreAvailable(productId : String, quantity : int) : void
+        + saveState() : InventoryState
+        + restoreState(state : InventoryState) : void
+        + getSnapshot() : InventoryState
+    }
+
+    class InventoryState {
+        - stockSnapshot : Map<String, Integer>
+        - reservedSnapshot : Map<String, Integer>
+        - unavailableSnapshot : Map<String, Integer>
+        - timestamp : long
+        + getStockSnapshot() : Map<String, Integer>
+        + getReservedSnapshot() : Map<String, Integer>
+        + getUnavailableSnapshot() : Map<String, Integer>
+        + getTimestamp() : long
+    }
+}
+
+InventoryManager o-- InventoryState : creates/restores
+note top of InventoryManager
+  Design Pattern: Memento (Originator)
+  Manages state snapshots for rollback
+end note
+
+note top of InventoryState
+  Design Pattern: Memento
+  Immutable state snapshot
+end note
+
+' ==================== CHAIN OF RESPONSIBILITY ====================
+package "failure" {
+    interface FailureHandler {
+        - nextHandler : FailureHandler
+        + setNext(handler : FailureHandler) : FailureHandler
+        + handleFailure(failureType : String, context : Object) : boolean
+    }
+
+    class RetryHandler {
+        - maxRetries : int
+        - retryCount : int
+        + handleFailure(failureType : String, context : Object) : boolean
+        - performRetry(context : Object) : boolean
+    }
+
+    class RecalibrationHandler {
+        + handleFailure(failureType : String, context : Object) : boolean
+        - performRecalibration(context : Object) : boolean
+    }
+
+    class TechnicianAlertHandler {
+        + handleFailure(failureType : String, context : Object) : boolean
+        - alertTechnician(failureType : String, context : Object) : void
+    }
+}
+
+FailureHandler o-- FailureHandler : next in chain
+RetryHandler --|> FailureHandler : implements
+RecalibrationHandler --|> FailureHandler : implements
+TechnicianAlertHandler --|> FailureHandler : implements
+
+note top of FailureHandler
+  Design Pattern: Chain of Responsibility
+  Passes requests along handler chain
+end note
+
+@enduml
