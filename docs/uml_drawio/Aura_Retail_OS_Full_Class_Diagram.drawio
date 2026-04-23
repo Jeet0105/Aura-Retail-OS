@@ -1,0 +1,374 @@
+<mxfile host="app.diagrams.net" modified="2024-01-15T10:30:00.000Z" agent="Mozilla/5.0" version="21.0.0" etag="aura-retail-os-full" type="device">
+  <diagram id="full-class-diagram" name="Aura Retail OS - Full Class Diagram">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="2339" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- CORE PACKAGE -->
+        <mxCell id="core-group" value="Core Package" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="50" y="50" width="320" height="550" as="geometry"/>
+        </mxCell>
+        
+        <!-- CentralRegistry (Singleton) -->
+        <mxCell id="central-registry" value="&lt;b&gt;CentralRegistry&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Singleton)&lt;/i&gt;&lt;hr&gt;- instance: CentralRegistry&lt;br&gt;- lock: ReentrantLock&lt;br&gt;- config: Map&lt;String, Object&gt;&lt;hr&gt;+ getInstance(): CentralRegistry&lt;br&gt;+ getConfig(key: String): Object&lt;br&gt;+ setConfig(key: String, value: Object): void&lt;br&gt;+ getSystemStatus(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="core-group">
+          <mxGeometry x="20" y="40" width="280" height="140" as="geometry"/>
+        </mxCell>
+        
+        <!-- EventBus (Observer) -->
+        <mxCell id="event-bus" value="&lt;b&gt;EventBus&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Observer/Publisher)&lt;/i&gt;&lt;hr&gt;- listeners: Map&lt;Class, List&lt;EventListener&gt;&gt;&lt;br&gt;- lock: ReentrantLock&lt;br&gt;- priorityQueue: PriorityQueue&lt;EventWrapper&gt;&lt;hr&gt;+ subscribe(eventType: Class, listener: EventListener): void&lt;br&gt;+ unsubscribe(eventType: Class, listener: EventListener): void&lt;br&gt;+ publish(event: SystemEvent): void&lt;br&gt;+ publish(event: SystemEvent, priority: Priority): void" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="core-group">
+          <mxGeometry x="20" y="200" width="280" height="140" as="geometry"/>
+        </mxCell>
+        
+        <!-- EventListener Interface -->
+        <mxCell id="event-listener" value="&lt;b&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;EventListener&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Observer)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ onEvent(event: SystemEvent): void" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;dashed=1;" vertex="1" parent="core-group">
+          <mxGeometry x="20" y="360" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- Priority Enum -->
+        <mxCell id="priority-enum" value="&lt;b&gt;&amp;lt;&amp;lt;enumeration&amp;gt;&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;Priority&lt;/b&gt;&lt;hr&gt;- LOW&lt;br&gt;- NORMAL&lt;br&gt;- HIGH&lt;br&gt;- CRITICAL" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffc8;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="core-group">
+          <mxGeometry x="20" y="460" width="280" height="70" as="geometry"/>
+        </mxCell>
+        
+        <!-- EVENTS PACKAGE -->
+        <mxCell id="events-group" value="Events Package" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="400" y="50" width="320" height="480" as="geometry"/>
+        </mxCell>
+        
+        <!-- SystemEvent Interface -->
+        <mxCell id="system-event" value="&lt;b&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;SystemEvent&lt;/b&gt;&lt;hr&gt;&lt;hr&gt;+ getType(): EventType&lt;br&gt;+ getTimestamp(): long&lt;br&gt;+ getSource(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;dashed=1;" vertex="1" parent="events-group">
+          <mxGeometry x="20" y="40" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- LowStockEvent -->
+        <mxCell id="low-stock-event" value="&lt;b&gt;LowStockEvent&lt;/b&gt;&lt;hr&gt;- productId: String&lt;br&gt;- currentStock: int&lt;br&gt;- threshold: int&lt;hr&gt;+ getType(): EventType&lt;br&gt;+ getProductId(): String&lt;br&gt;+ getCurrentStock(): int" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="events-group">
+          <mxGeometry x="20" y="140" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- HardwareFailureEvent -->
+        <mxCell id="hardware-failure-event" value="&lt;b&gt;HardwareFailureEvent&lt;/b&gt;&lt;hr&gt;- componentId: String&lt;br&gt;- errorCode: String&lt;br&gt;- severity: Severity&lt;hr&gt;+ getType(): EventType&lt;br&gt;+ getComponentId(): String&lt;br&gt;+ getErrorCode(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="events-group">
+          <mxGeometry x="20" y="260" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- EmergencyModeActivated -->
+        <mxCell id="emergency-mode-event" value="&lt;b&gt;EmergencyModeActivated&lt;/b&gt;&lt;hr&gt;- reason: String&lt;br&gt;- affectedKiosks: List&lt;String&gt;&lt;hr&gt;+ getType(): EventType&lt;br&gt;+ getReason(): String&lt;br&gt;+ getAffectedKiosks(): List&lt;String&gt;" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="events-group">
+          <mxGeometry x="20" y="380" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- STATE PACKAGE -->
+        <mxCell id="state-group" value="State Package" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#d5e8d4;strokeColor=#82b366;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="750" y="50" width="320" height="550" as="geometry"/>
+        </mxCell>
+        
+        <!-- KioskState Interface -->
+        <mxCell id="kiosk-state" value="&lt;b&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;KioskState&lt;/b&gt;&lt;br&gt;&lt;i&gt;(State)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ enter(context: KioskContext): void&lt;br&gt;+ exit(context: KioskContext): void&lt;br&gt;+ canPurchase(): boolean&lt;br&gt;+ canRestock(): boolean&lt;br&gt;+ getName(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;dashed=1;" vertex="1" parent="state-group">
+          <mxGeometry x="20" y="40" width="280" height="120" as="geometry"/>
+        </mxCell>
+        
+        <!-- KioskContext -->
+        <mxCell id="kiosk-context" value="&lt;b&gt;KioskContext&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Context)&lt;/i&gt;&lt;hr&gt;- currentState: KioskState&lt;br&gt;- kioskId: String&lt;hr&gt;+ setState(state: KioskState): void&lt;br&gt;+ getState(): KioskState&lt;br&gt;+ getCurrentStateInfo(): String&lt;br&gt;+ canPurchase(): boolean" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="state-group">
+          <mxGeometry x="20" y="180" width="280" height="120" as="geometry"/>
+        </mxCell>
+        
+        <!-- ActiveMode -->
+        <mxCell id="active-mode" value="&lt;b&gt;ActiveMode&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete State)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ enter(context: KioskContext): void&lt;br&gt;+ exit(context: KioskContext): void&lt;br&gt;+ canPurchase(): boolean&lt;br&gt;+ canRestock(): boolean&lt;br&gt;+ getName(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="state-group">
+          <mxGeometry x="20" y="320" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- PowerSavingMode -->
+        <mxCell id="power-saving-mode" value="&lt;b&gt;PowerSavingMode&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete State)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ enter(context: KioskContext): void&lt;br&gt;+ exit(context: KioskContext): void&lt;br&gt;+ canPurchase(): boolean&lt;br&gt;+ canRestock(): boolean&lt;br&gt;+ getName(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="state-group">
+          <mxGeometry x="20" y="440" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- STRATEGY PACKAGE -->
+        <mxCell id="strategy-group" value="Strategy Package" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="50" width="320" height="480" as="geometry"/>
+        </mxCell>
+        
+        <!-- PricingStrategy Interface -->
+        <mxCell id="pricing-strategy" value="&lt;b&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;PricingStrategy&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Strategy)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ calculatePrice(basePrice: double, quantity: int): double&lt;br&gt;+ getStrategyName(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;dashed=1;" vertex="1" parent="strategy-group">
+          <mxGeometry x="20" y="40" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- PricingContext -->
+        <mxCell id="pricing-context" value="&lt;b&gt;PricingContext&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Context)&lt;/i&gt;&lt;hr&gt;- currentStrategy: PricingStrategy&lt;hr&gt;+ setStrategy(strategy: PricingStrategy): void&lt;br&gt;+ executePricing(basePrice: double, quantity: int): double&lt;br&gt;+ getCurrentStrategyName(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="strategy-group">
+          <mxGeometry x="20" y="160" width="280" height="120" as="geometry"/>
+        </mxCell>
+        
+        <!-- StandardPricing -->
+        <mxCell id="standard-pricing" value="&lt;b&gt;StandardPricing&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Strategy)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ calculatePrice(basePrice: double, quantity: int): double&lt;br&gt;+ getStrategyName(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="strategy-group">
+          <mxGeometry x="20" y="300" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- DiscountedPricing -->
+        <mxCell id="discounted-pricing" value="&lt;b&gt;DiscountedPricing&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Strategy)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ calculatePrice(basePrice: double, quantity: int): double&lt;br&gt;+ getStrategyName(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="strategy-group">
+          <mxGeometry x="20" y="390" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- COMMAND PACKAGE -->
+        <mxCell id="command-group" value="Command Package" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#f8cecc;strokeColor=#b85450;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="50" y="630" width="320" height="500" as="geometry"/>
+        </mxCell>
+        
+        <!-- TransactionCommand Interface -->
+        <mxCell id="transaction-command" value="&lt;b&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;TransactionCommand&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Command)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ execute(): boolean&lt;br&gt;+ undo(): void&lt;br&gt;+ getCommandName(): String&lt;br&gt;+ getTimestamp(): long" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;dashed=1;" vertex="1" parent="command-group">
+          <mxGeometry x="20" y="40" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- PurchaseItemCommand -->
+        <mxCell id="purchase-command" value="&lt;b&gt;PurchaseItemCommand&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Command + Memento)&lt;/i&gt;&lt;hr&gt;- inventoryManager: InventoryManager&lt;br&gt;- productId: String&lt;br&gt;- quantity: int&lt;br&gt;- savedState: InventoryState&lt;br&gt;- success: boolean&lt;hr&gt;+ execute(): boolean&lt;br&gt;+ undo(): void&lt;br&gt;+ saveState(): void&lt;br&gt;+ restoreState(): void" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="command-group">
+          <mxGeometry x="20" y="160" width="280" height="140" as="geometry"/>
+        </mxCell>
+        
+        <!-- RefundCommand -->
+        <mxCell id="refund-command" value="&lt;b&gt;RefundCommand&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Command)&lt;/i&gt;&lt;hr&gt;- transactionId: String&lt;br&gt;- inventoryManager: InventoryManager&lt;hr&gt;+ execute(): boolean&lt;br&gt;+ undo(): void&lt;br&gt;+ getCommandName(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="command-group">
+          <mxGeometry x="20" y="320" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- RestockCommand -->
+        <mxCell id="restock-command" value="&lt;b&gt;RestockCommand&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Command)&lt;/i&gt;&lt;hr&gt;- productId: String&lt;br&gt;- quantity: int&lt;br&gt;- inventoryManager: InventoryManager&lt;hr&gt;+ execute(): boolean&lt;br&gt;+ undo(): void&lt;br&gt;+ getCommandName(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="command-group">
+          <mxGeometry x="20" y="440" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- MEMENTO PACKAGE -->
+        <mxCell id="memento-group" value="Memento Package" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#fff2cc;strokeColor=#d6b656;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="400" y="630" width="320" height="300" as="geometry"/>
+        </mxCell>
+        
+        <!-- InventoryManager (Originator) -->
+        <mxCell id="inventory-manager" value="&lt;b&gt;InventoryManager&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Originator)&lt;/i&gt;&lt;hr&gt;- stockLevels: Map&lt;String, Integer&gt;&lt;br&gt;- reservedStock: Map&lt;String, Integer&gt;&lt;br&gt;- unavailableStock: Map&lt;String, Integer&gt;&lt;br&gt;- lock: ReentrantLock&lt;hr&gt;+ getStock(productId: String): int&lt;br&gt;+ getAvailableStock(productId: String): int&lt;br&gt;+ reduceStock(productId: String, qty: int): boolean&lt;br&gt;+ createMemento(): InventoryState&lt;br&gt;+ restoreMemento(state: InventoryState): void&lt;br&gt;+ reserveStock(productId: String, qty: int): boolean&lt;br&gt;+ markUnavailable(productId: String, qty: int): void" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="memento-group">
+          <mxGeometry x="20" y="40" width="280" height="160" as="geometry"/>
+        </mxCell>
+        
+        <!-- InventoryState (Memento) -->
+        <mxCell id="inventory-state" value="&lt;b&gt;InventoryState&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Memento)&lt;/i&gt;&lt;hr&gt;- snapshot: Map&lt;String, Integer&gt;&lt;br&gt;- timestamp: long&lt;hr&gt;+ getSnapshot(): Map&lt;String, Integer&gt;&lt;br&gt;+ getTimestamp(): long&lt;br&gt;+ getStock(productId: String): int" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="memento-group">
+          <mxGeometry x="20" y="220" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- CHAIN OF RESPONSIBILITY PACKAGE -->
+        <mxCell id="chain-group" value="Chain of Responsibility Package" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#d0cee2;strokeColor=#56517e;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="750" y="630" width="320" height="500" as="geometry"/>
+        </mxCell>
+        
+        <!-- FailureHandler Interface -->
+        <mxCell id="failure-handler" value="&lt;b&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;FailureHandler&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Chain of Responsibility)&lt;/i&gt;&lt;hr&gt;- nextHandler: FailureHandler&lt;hr&gt;+ setNext(handler: FailureHandler): FailureHandler&lt;br&gt;+ handleFailure(errorCode: String, context: Map): boolean&lt;br&gt;+ canHandle(errorCode: String): boolean" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;dashed=1;" vertex="1" parent="chain-group">
+          <mxGeometry x="20" y="40" width="280" height="120" as="geometry"/>
+        </mxCell>
+        
+        <!-- RetryHandler -->
+        <mxCell id="retry-handler" value="&lt;b&gt;RetryHandler&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Handler)&lt;/i&gt;&lt;hr&gt;- maxRetries: int = 3&lt;hr&gt;+ canHandle(errorCode: String): boolean&lt;br&gt;+ handleFailure(errorCode: String, context: Map): boolean&lt;br&gt;- performRetry(errorCode: String): boolean" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="chain-group">
+          <mxGeometry x="20" y="180" width="280" height="120" as="geometry"/>
+        </mxCell>
+        
+        <!-- RecalibrationHandler -->
+        <mxCell id="recalibration-handler" value="&lt;b&gt;RecalibrationHandler&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Handler)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ canHandle(errorCode: String): boolean&lt;br&gt;+ handleFailure(errorCode: String, context: Map): boolean&lt;br&gt;- performRecalibration(componentId: String): boolean" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="chain-group">
+          <mxGeometry x="20" y="320" width="280" height="120" as="geometry"/>
+        </mxCell>
+        
+        <!-- TechnicianAlertHandler -->
+        <mxCell id="technician-handler" value="&lt;b&gt;TechnicianAlertHandler&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Handler)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ canHandle(errorCode: String): boolean&lt;br&gt;+ handleFailure(errorCode: String, context: Map): boolean&lt;br&gt;- alertTechnician(errorCode: String, details: String): void" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="chain-group">
+          <mxGeometry x="20" y="460" width="280" height="120" as="geometry"/>
+        </mxCell>
+        
+        <!-- FACTORY PACKAGE -->
+        <mxCell id="factory-group" value="Factory Package" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#e6ffcc;strokeColor=#3d8b3d;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="630" width="320" height="550" as="geometry"/>
+        </mxCell>
+        
+        <!-- KioskFactory Interface -->
+        <mxCell id="kiosk-factory" value="&lt;b&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/b&gt;&lt;br&gt;&lt;b&gt;KioskFactory&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Abstract Factory)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ createDispenser(): Dispenser&lt;br&gt;+ createVerificationModule(): VerificationModule&lt;br&gt;+ createInventoryPolicy(): InventoryPolicy&lt;br&gt;+ getKioskType(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;dashed=1;" vertex="1" parent="factory-group">
+          <mxGeometry x="20" y="40" width="280" height="120" as="geometry"/>
+        </mxCell>
+        
+        <!-- PharmacyKioskFactory -->
+        <mxCell id="pharmacy-factory" value="&lt;b&gt;PharmacyKioskFactory&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Factory)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ createDispenser(): Dispenser&lt;br&gt;+ createVerificationModule(): VerificationModule&lt;br&gt;+ createInventoryPolicy(): InventoryPolicy&lt;br&gt;+ getKioskType(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="factory-group">
+          <mxGeometry x="20" y="180" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- FoodKioskFactory -->
+        <mxCell id="food-factory" value="&lt;b&gt;FoodKioskFactory&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Factory)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ createDispenser(): Dispenser&lt;br&gt;+ createVerificationModule(): VerificationModule&lt;br&gt;+ createInventoryPolicy(): InventoryPolicy&lt;br&gt;+ getKioskType(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="factory-group">
+          <mxGeometry x="20" y="300" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- EmergencyReliefKioskFactory -->
+        <mxCell id="emergency-factory" value="&lt;b&gt;EmergencyReliefKioskFactory&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Concrete Factory)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ createDispenser(): Dispenser&lt;br&gt;+ createVerificationModule(): VerificationModule&lt;br&gt;+ createInventoryPolicy(): InventoryPolicy&lt;br&gt;+ getKioskType(): String" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="factory-group">
+          <mxGeometry x="20" y="420" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- FACADE PACKAGE -->
+        <mxCell id="facade-group" value="Facade &amp;amp; Persistence" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#cce5ff;strokeColor=#366994;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="50" y="1160" width="320" height="350" as="geometry"/>
+        </mxCell>
+        
+        <!-- KioskInterface (Facade) -->
+        <mxCell id="kiosk-interface" value="&lt;b&gt;KioskInterface&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Facade)&lt;/i&gt;&lt;hr&gt;- stateContext: KioskContext&lt;br&gt;- pricingContext: PricingContext&lt;br&gt;- inventoryManager: InventoryManager&lt;br&gt;- failureChain: FailureHandler&lt;br&gt;- hardwareOperational: boolean&lt;br&gt;- networkConnected: boolean&lt;hr&gt;+ purchaseItem(userId: String, productId: String, qty: int): boolean&lt;br&gt;+ refundTransaction(transactionId: String): boolean&lt;br&gt;+ restockInventory(productId: String, qty: int): boolean&lt;br&gt;+ runDiagnostics(): String&lt;br&gt;+ setHardwareStatus(operational: boolean): void&lt;br&gt;+ setNetworkStatus(connected: boolean): void" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="facade-group">
+          <mxGeometry x="20" y="40" width="280" height="180" as="geometry"/>
+        </mxCell>
+        
+        <!-- PersistenceManager -->
+        <mxCell id="persistence-manager" value="&lt;b&gt;PersistenceManager&lt;/b&gt;&lt;hr&gt;- configPath: String&lt;br&gt;- transactionsPath: String&lt;br&gt;- inventoryPath: String&lt;hr&gt;+ loadConfig(): Map&lt;String, String&gt;&lt;br&gt;+ saveTransactions(transactions: List&lt;String&gt;): void&lt;br&gt;+ loadTransactions(): List&lt;String&gt;&lt;br&gt;+ saveInventory(snapshot: InventoryState): void&lt;br&gt;+ loadInventory(): InventoryState" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="facade-group">
+          <mxGeometry x="20" y="240" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- COMPONENTS PACKAGE -->
+        <mxCell id="components-group" value="Factory Components" style="swimlane;html=1;startSize=23;horizontal=1;container=1;collapsible=0;childLayout=stackLayout;resizeParent=1;resizeLast=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="400" y="1160" width="320" height="350" as="geometry"/>
+        </mxCell>
+        
+        <!-- Dispenser -->
+        <mxCell id="dispenser" value="&lt;b&gt;Dispenser&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Abstract Factory Product)&lt;/i&gt;&lt;hr&gt;- dispenserId: String&lt;br&gt;- operational: boolean&lt;hr&gt;+ dispense(productId: String, qty: int): boolean&lt;br&gt;+ isOperational(): boolean&lt;br&gt;+ calibrate(): boolean" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="components-group">
+          <mxGeometry x="20" y="40" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- VerificationModule -->
+        <mxCell id="verification-module" value="&lt;b&gt;VerificationModule&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Abstract Factory Product)&lt;/i&gt;&lt;hr&gt;- moduleId: String&lt;hr&gt;+ verifyUser(userId: String): boolean&lt;br&gt;+ verifyProduct(productId: String): boolean" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="components-group">
+          <mxGeometry x="20" y="160" width="280" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- InventoryPolicy -->
+        <mxCell id="inventory-policy" value="&lt;b&gt;InventoryPolicy&lt;/b&gt;&lt;br&gt;&lt;i&gt;(Abstract Factory Product)&lt;/i&gt;&lt;hr&gt;&lt;hr&gt;+ canDispense(productId: String, qty: int): boolean&lt;br&gt;+ getPolicyName(): String&lt;br&gt;+ getMaxQuantity(productId: String): int" style="html=1;overflow=fill;whiteSpace=wrap;rounded=0;shadow=0;glass=0;comic=0;labelBackgroundColor=none;strokeColor=#000000;strokeWidth=1;fillColor=#ffffff;fontFamily=Verdana;fontSize=12;fontColor=#000000;align=center;" vertex="1" parent="components-group">
+          <mxGeometry x="20" y="260" width="280" height="100" as="geometry"/>
+        </mxCell>
+        
+        <!-- RELATIONSHIPS -->
+        
+        <!-- Core to Events -->
+        <mxCell id="rel-core-events" value="" style="endArrow=classic;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;curved=0;" edge="1" parent="1" source="event-bus" target="system-event">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- EventBus implements EventListener subscription -->
+        <mxCell id="rel-bus-listener" value="" style="endArrow=classic;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="event-bus" target="event-listener">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Events inheritance -->
+        <mxCell id="rel-event-inherit-1" value="extends" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="low-stock-event" target="system-event">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-event-inherit-2" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="hardware-failure-event" target="system-event">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-event-inherit-3" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="emergency-mode-event" target="system-event">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- State inheritance -->
+        <mxCell id="rel-state-inherit-1" value="implements" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="active-mode" target="kiosk-state">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-state-inherit-2" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="power-saving-mode" target="kiosk-state">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Context uses State -->
+        <mxCell id="rel-context-state" value="uses" style="endArrow=open;endSize=12;startArrow=oval;startSize=10;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="kiosk-context" target="kiosk-state">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Strategy inheritance -->
+        <mxCell id="rel-strategy-inherit-1" value="implements" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="standard-pricing" target="pricing-strategy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-strategy-inherit-2" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="discounted-pricing" target="pricing-strategy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Context uses Strategy -->
+        <mxCell id="rel-context-strategy" value="uses" style="endArrow=open;endSize=12;startArrow=oval;startSize=10;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="pricing-context" target="pricing-strategy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Command inheritance -->
+        <mxCell id="rel-command-inherit-1" value="implements" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="purchase-command" target="transaction-command">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-command-inherit-2" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="refund-command" target="transaction-command">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-command-inherit-3" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="restock-command" target="transaction-command">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Command uses Memento -->
+        <mxCell id="rel-command-memento" value="creates/restores" style="endArrow=open;endSize=12;startArrow=oval;startSize=10;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="purchase-command" target="inventory-manager">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Memento relationship -->
+        <mxCell id="rel-memento" value="creates" style="endArrow=open;endSize=12;startArrow=oval;startSize=10;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="inventory-manager" target="inventory-state">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Chain inheritance -->
+        <mxCell id="rel-chain-inherit-1" value="implements" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="retry-handler" target="failure-handler">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-chain-inherit-2" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="recalibration-handler" target="failure-handler">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-chain-inherit-3" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="technician-handler" target="failure-handler">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Chain sequence -->
+        <mxCell id="rel-chain-seq-1" value="next" style="endArrow=open;endSize=12;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="retry-handler" target="recalibration-handler">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-chain-seq-2" value="next" style="endArrow=open;endSize=12;html=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="recalibration-handler" target="technician-handler">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Factory inheritance -->
+        <mxCell id="rel-factory-inherit-1" value="implements" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="pharmacy-factory" target="kiosk-factory">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-factory-inherit-2" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="food-factory" target="kiosk-factory">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-factory-inherit-3" value="" style="endArrow=block;endSize=16;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;dashed=1;" edge="1" parent="1" source="emergency-factory" target="kiosk-factory">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Factory creates components -->
+        <mxCell id="rel-factory-components" value="creates" style="endArrow=open;endSize=12;startArrow=oval;startSize=10;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="kiosk-factory" target="dispenser">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Facade uses multiple subsystems -->
+        <mxCell id="rel-facade-state" value="uses" style="endArrow=open;endSize=12;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="kiosk-interface" target="kiosk-context">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-facade-strategy" value="uses" style="endArrow=open;endSize=12;html=1;exitX=0.5;exitY=0;entryX=1;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="kiosk-interface" target="pricing-context">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-facade-inventory" value="uses" style="endArrow=open;endSize=12;html=1;exitX=0;exitY=0;entryX=0.5;entryY=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="kiosk-interface" target="inventory-manager">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="rel-facade-chain" value="uses" style="endArrow=open;endSize=12;html=1;exitX=1;exitY=0;entryX=0.5;entryY=1;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="kiosk-interface" target="failure-handler">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <!-- Persistence uses Memento -->
+        <mxCell id="rel-persistence-memento" value="saves/loads" style="endArrow=open;endSize=12;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="persistence-manager" target="inventory-state">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
