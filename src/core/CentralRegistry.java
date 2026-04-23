@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Design Pattern: Singleton
+ * Thread-safe singleton for global configuration and status management.
+ */
 public class CentralRegistry {
     private static CentralRegistry instance;
     private Map<String, Object> configuration;

@@ -2,6 +2,10 @@ package factory;
 
 import factory.components.*;
 
+/**
+ * Design Pattern: Abstract Factory (Concrete Factory)
+ * Creates components for pharmacy kiosks with secure medication handling.
+ */
 public class PharmacyKioskFactory implements KioskFactory {
     @Override
     public Dispenser createDispenser() {

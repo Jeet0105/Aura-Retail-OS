@@ -3,6 +3,10 @@ package persistence;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Utility class for file-based persistence.
+ * Handles saving/loading inventory, transactions, and configuration.
+ */
 public class PersistenceManager {
     private static final String DATA_DIR = "data";
     private static final String INVENTORY_FILE = "data/inventory.csv";
@@ -74,9 +78,21 @@ public class PersistenceManager {
             FileWriter writer = new FileWriter(TRANSACTION_FILE);
             writer.write("Timestamp,UserID,ProductID,Quantity,Price,Status\n");
             for (String tx : transactionHistory) {
-                writer.write(tx + "\n");
+                // Parse the human-readable format and convert to proper CSV
+                // Format: "timestamp | User: userId | Product: productId | Qty: amount | Price: ₹price | Status: status"
+                String[] parts = tx.split(" \\| ");
+                if (parts.length >= 6) {
+                    String timestamp = parts[0].trim();
+                    String userId = parts[1].replace("User: ", "").trim();
+                    String productId = parts[2].replace("Product: ", "").trim();
+                    String quantity = parts[3].replace("Qty: ", "").trim();
+                    String price = parts[4].replace("Price: ₹", "").trim();
+                    String status = parts[5].replace("Status: ", "").trim();
+                    writer.write(timestamp + "," + userId + "," + productId + "," + quantity + "," + price + "," + status + "\n");
+                }
             }
             writer.close();
+            System.out.println("[Persistence] Saved transactions to CSV");
         } catch (IOException e) {
             System.err.println("[Persistence] Error saving transactions: " + e.getMessage());
         }

@@ -1,5 +1,10 @@
 package command;
 
+/**
+ * Design Pattern: Command (Concrete Command)
+ * Encapsulates inventory restock operation.
+ */
+
 import memento.InventoryManager;
 import memento.InventoryState;
 

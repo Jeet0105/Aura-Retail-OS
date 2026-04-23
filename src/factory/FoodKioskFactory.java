@@ -2,6 +2,10 @@ package factory;
 
 import factory.components.*;
 
+/**
+ * Design Pattern: Abstract Factory (Concrete Factory)
+ * Creates components for food kiosks with refrigeration support.
+ */
 public class FoodKioskFactory implements KioskFactory {
     @Override
     public Dispenser createDispenser() {

@@ -1,5 +1,9 @@
 package core.events;
 
+/**
+ * Design Pattern: Observer (Concrete Event)
+ * Event triggered when inventory falls below threshold.
+ */
 public class LowStockEvent implements SystemEvent {
     private String productId;
     private int currentStock;

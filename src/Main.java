@@ -1,3 +1,10 @@
+/**
+ * Aura Retail OS - Main Simulation
+ * 
+ * Demonstrates all 9 design patterns:
+ * Singleton, Abstract Factory, Command, Memento, State, Strategy,
+ * Chain of Responsibility, Observer, and Facade.
+ */
 import core.CentralRegistry;
 import core.EventBus;
 import core.events.EmergencyModeActivated;
@@ -22,10 +29,25 @@ import strategy.PricingContext;
 import strategy.StandardPricing;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
+    private static Scanner scanner = new Scanner(System.in);
+    
+    // Helper method to wait for user input before proceeding
+    private static void waitForUser(String scenarioName) {
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("SCENARIO: " + scenarioName);
+        System.out.println("=".repeat(60));
+        System.out.print("\nPress ENTER to start this scenario...");
+        scanner.nextLine();
+        System.out.println();
+    }
+    
     public static void main(String[] args) {
         System.out.println("=== Aura Retail OS Starting ===");
+        System.out.println("This simulation will run through multiple scenarios.");
+        System.out.println("You will be prompted to press ENTER before each scenario begins.\n");
         
         // Initialize persistence layer
         PersistenceManager persistence = new PersistenceManager();
@@ -67,7 +89,7 @@ public class Main {
         });
         
         // ========== PHARMACY KIOSK TEST ==========
-        System.out.println("\n\n========== PHARMACY KIOSK DEPLOYMENT ==========");
+        waitForUser("PHARMACY KIOSK DEPLOYMENT");
         InventoryManager pharmacyInventory = new InventoryManager();
         PricingContext pharmacyPricing = new PricingContext(new StandardPricing());
         KioskInterface pharmacyKiosk = new KioskInterface(new PharmacyKioskFactory(), pharmacyInventory, pharmacyPricing);
@@ -83,16 +105,22 @@ public class Main {
 
         System.out.println("\n-> Hardware Failure Scenario (Transaction Rollback + Chain of Responsibility)");
         System.out.println("Current Stock before failure: " + pharmacyInventory.getStock("Amoxicillin"));
+        System.out.println("Available Stock before failure: " + pharmacyInventory.getAvailableStock("Amoxicillin"));
         pharmacyKiosk.simulateFailingPurchase("User456", "Amoxicillin", 5, 10.0);
         bus.publish(new HardwareFailureEvent("Pharmacy-Dispenser-Unit-1", "Motor stalled"));
         System.out.println("Final Stock after failed transaction: " + pharmacyInventory.getStock("Amoxicillin"));
+        System.out.println("Available Stock after failed transaction: " + pharmacyInventory.getAvailableStock("Amoxicillin"));
         persistence.recordTransaction("User456", "Amoxicillin", 5, 50.0, "FAILED_ROLLBACK");
         
         System.out.println("\n-> Diagnostics Check");
         pharmacyKiosk.runDiagnostics();
+        
+        // Save inventory to demonstrate persistence (fixing requirement 3.2 gap)
+        System.out.println("\n-> Saving inventory state to file...");
+        persistence.saveInventory(pharmacyInventory.getSnapshot());
 
         // ========== FOOD KIOSK TEST ==========
-        System.out.println("\n\n========== FOOD KIOSK DEPLOYMENT ==========");
+        waitForUser("FOOD KIOSK DEPLOYMENT");
         InventoryManager foodInventory = new InventoryManager();
         PricingContext foodPricing = new PricingContext(new DiscountedPricing(10)); // 10% discount
         KioskInterface foodKiosk = new KioskInterface(new FoodKioskFactory(), foodInventory, foodPricing);
@@ -111,7 +139,7 @@ public class Main {
         bus.publish(new LowStockEvent("Sandwich", 1, 5));
 
         // ========== EMERGENCY RELIEF KIOSK TEST ==========
-        System.out.println("\n\n========== EMERGENCY RELIEF KIOSK DEPLOYMENT ==========");
+        waitForUser("EMERGENCY RELIEF KIOSK DEPLOYMENT");
         InventoryManager reliefInventory = new InventoryManager();
         PricingContext reliefPricing = new PricingContext(new StandardPricing());
         KioskInterface emergencyKiosk = new KioskInterface(new EmergencyReliefKioskFactory(), reliefInventory, reliefPricing);
@@ -139,7 +167,7 @@ public class Main {
         persistence.recordTransaction("User999", "WaterBottle", 2, 5.0, "SUCCESS_EMERGENCY");
 
         // ========== STATE MACHINE FULL COVERAGE TEST ==========
-        System.out.println("\n\n========== STATE MACHINE COVERAGE TEST ==========");
+        waitForUser("STATE MACHINE COVERAGE TEST");
         System.out.println("\n-> Testing all state transitions...");
         
         InventoryManager testInventory = new InventoryManager();
@@ -163,14 +191,14 @@ public class Main {
         System.out.println("(Note: MaintenanceMode has no exit - would need separate controller for recovery)");
 
         // ========== REFUND SCENARIO TEST ==========
-        System.out.println("\n\n========== REFUND PROCESSING TEST ==========");
+        waitForUser("REFUND PROCESSING TEST");
         System.out.println("Pharmacy Stock before refund: " + pharmacyInventory.getStock("Amoxicillin"));
         pharmacyKiosk.refundTransaction("User123", "Amoxicillin", 2);
         System.out.println("Pharmacy Stock after refund: " + pharmacyInventory.getStock("Amoxicillin"));
         persistence.recordTransaction("User123", "Amoxicillin", 2, 20.0, "REFUND");
 
         // ========== CONCURRENCY TEST ==========
-        System.out.println("\n\n========== CONCURRENCY INTEGRITY TEST ==========");
+        waitForUser("CONCURRENCY INTEGRITY TEST");
         System.out.println("Initial Amoxicillin stock: " + pharmacyInventory.getStock("Amoxicillin"));
         System.out.println("Spawning 2 concurrent purchase threads (10 items each)...");
         
@@ -193,10 +221,12 @@ public class Main {
         }
 
         // ========== PERSISTENCE SUMMARY ==========
-        System.out.println("\n\n========== PERSISTENCE LAYER DEMONSTRATION ==========");
+        waitForUser("PERSISTENCE LAYER DEMONSTRATION");
         persistence.saveConfiguration(config);
         persistence.printTransactionSummary();
 
         System.out.println("\n=== Simulation Complete ===");
+        System.out.println("Thank you for running the Aura Retail OS simulation!");
+        scanner.close();
     }
 }

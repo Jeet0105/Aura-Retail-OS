@@ -1,5 +1,9 @@
 package core.events;
 
+/**
+ * Design Pattern: Observer (Concrete Event)
+ * Event triggered when emergency mode is activated system-wide.
+ */
 public class EmergencyModeActivated implements SystemEvent {
     private String reason;
 

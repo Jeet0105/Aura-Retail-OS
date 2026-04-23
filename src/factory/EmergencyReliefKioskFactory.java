@@ -1,5 +1,10 @@
 package factory;
 
+/**
+ * Design Pattern: Abstract Factory (Concrete Factory)
+ * Creates components for emergency relief kiosks with rationing support.
+ */
+
 import factory.components.*;
 
 public class EmergencyReliefKioskFactory implements KioskFactory {

@@ -1,5 +1,10 @@
 package command;
 
+/**
+ * Design Pattern: Command (Concrete Command) + Memento integration
+ * Encapsulates purchase operation with state save/restore for rollback.
+ */
+
 import memento.InventoryManager;
 import memento.InventoryState;
 import factory.components.Dispenser;

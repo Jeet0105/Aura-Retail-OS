@@ -1,5 +1,9 @@
 package state;
 
+/**
+ * Design Pattern: State (Concrete State)
+ * Emergency lockdown mode with restricted operations and rationing.
+ */
 public class EmergencyLockdownMode implements KioskState {
     @Override
     public void handlePurchase(KioskContext context) {

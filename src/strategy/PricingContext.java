@@ -1,5 +1,9 @@
 package strategy;
 
+/**
+ * Design Pattern: Strategy (Context)
+ * Executes the currently selected pricing strategy.
+ */
 public class PricingContext {
     private PricingStrategy strategy;
 

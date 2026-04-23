@@ -1,5 +1,10 @@
 package command;
 
+/**
+ * Design Pattern: Command (Concrete Command)
+ * Encapsulates refund transaction operation.
+ */
+
 import memento.InventoryManager;
 
 public class RefundCommand implements TransactionCommand {

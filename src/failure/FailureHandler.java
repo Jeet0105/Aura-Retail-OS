@@ -1,5 +1,9 @@
 package failure;
 
+/**
+ * Design Pattern: Chain of Responsibility (Abstract Handler)
+ * Abstract base class for failure handling chain.
+ */
 public abstract class FailureHandler {
     protected FailureHandler nextHandler;
 

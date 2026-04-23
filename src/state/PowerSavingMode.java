@@ -1,5 +1,9 @@
 package state;
 
+/**
+ * Design Pattern: State (Concrete State)
+ * Power-saving mode that wakes up on user interaction.
+ */
 public class PowerSavingMode implements KioskState {
     @Override
     public void handlePurchase(KioskContext context) {

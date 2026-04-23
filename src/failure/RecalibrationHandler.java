@@ -1,5 +1,10 @@
 package failure;
 
+/**
+ * Design Pattern: Chain of Responsibility (Concrete Handler)
+ * Second handler in chain - attempts hardware recalibration.
+ */
+
 public class RecalibrationHandler extends FailureHandler {
     @Override
     public void handleFailure(String failureContext) {

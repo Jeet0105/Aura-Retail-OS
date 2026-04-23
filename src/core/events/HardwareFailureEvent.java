@@ -1,5 +1,9 @@
 package core.events;
 
+/**
+ * Design Pattern: Observer (Concrete Event)
+ * Event triggered when a hardware component fails.
+ */
 public class HardwareFailureEvent implements SystemEvent {
     private String componentName;
     private String errorMessage;

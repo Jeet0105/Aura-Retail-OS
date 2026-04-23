@@ -1,5 +1,10 @@
 package memento;
 
+/**
+ * Design Pattern: Memento (Memento)
+ * Immutable snapshot of inventory state for rollback capability.
+ */
+
 import java.util.HashMap;
 import java.util.Map;
 

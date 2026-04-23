@@ -1,5 +1,9 @@
 package state;
 
+/**
+ * Design Pattern: State (Concrete State)
+ * Maintenance mode where purchases are disabled for servicing.
+ */
 public class MaintenanceMode implements KioskState {
     @Override
     public void handlePurchase(KioskContext context) {
