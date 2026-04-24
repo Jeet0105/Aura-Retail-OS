@@ -4,22 +4,29 @@ package memento;
  * Design Pattern: Memento (Originator)
  * Manages inventory with thread-safe operations and memento support.
  * Tracks both total stock and available stock (considering reserved/unavailable items).
+ * Supports hardware dependency constraint (4.2c) — products tied to specific hardware modules.
  */
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class InventoryManager {
     private Map<String, Integer> inventory;
     private Map<String, Integer> reservedStock;      // Items reserved for pending transactions
     private Map<String, Integer> unavailableStock;   // Items unavailable due to hardware faults
+    private Map<String, String> hardwareDependencies; // productId -> required hardware module
+    private Set<String> faultedHardware;              // Set of currently faulted hardware modules
     private final ReentrantLock lock;
 
     public InventoryManager() {
         this.inventory = new HashMap<>();
         this.reservedStock = new HashMap<>();
         this.unavailableStock = new HashMap<>();
+        this.hardwareDependencies = new HashMap<>();
+        this.faultedHardware = new HashSet<>();
         this.lock = new ReentrantLock();
     }
 
@@ -193,6 +200,85 @@ public class InventoryManager {
         lock.lock();
         try {
             return new HashMap<>(this.inventory);
+        } finally {
+            lock.unlock();
+        }
+    }
+    
+    // ========== Hardware Dependency Constraint (Section 4.2c) ==========
+    
+    /**
+     * Associates a product with a required hardware module.
+     * Products requiring specific hardware (e.g., refrigeration) become
+     * unavailable if that hardware module is reported as faulted.
+     */
+    public void setHardwareDependency(String productId, String hardwareModule) {
+        lock.lock();
+        try {
+            hardwareDependencies.put(productId, hardwareModule);
+            System.out.println("[InventoryManager] Product '" + productId + "' depends on hardware: " + hardwareModule);
+        } finally {
+            lock.unlock();
+        }
+    }
+    
+    /**
+     * Reports a hardware module as faulted.
+     * All products depending on this hardware become unavailable.
+     */
+    public void reportHardwareFault(String hardwareModule) {
+        lock.lock();
+        try {
+            faultedHardware.add(hardwareModule);
+            System.out.println("[InventoryManager] Hardware fault reported: " + hardwareModule);
+            // Log affected products
+            for (Map.Entry<String, String> entry : hardwareDependencies.entrySet()) {
+                if (entry.getValue().equals(hardwareModule)) {
+                    System.out.println("[InventoryManager] -> Product '" + entry.getKey() + "' is now UNAVAILABLE");
+                }
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+    
+    /**
+     * Clears a hardware fault, restoring availability of dependent products.
+     */
+    public void clearHardwareFault(String hardwareModule) {
+        lock.lock();
+        try {
+            faultedHardware.remove(hardwareModule);
+            System.out.println("[InventoryManager] Hardware restored: " + hardwareModule);
+        } finally {
+            lock.unlock();
+        }
+    }
+    
+    /**
+     * Checks if a product is available considering hardware dependencies.
+     * Returns false if the product depends on faulted hardware.
+     */
+    public boolean isProductAvailable(String productId) {
+        lock.lock();
+        try {
+            String requiredHardware = hardwareDependencies.get(productId);
+            if (requiredHardware != null && faultedHardware.contains(requiredHardware)) {
+                return false;
+            }
+            return true;
+        } finally {
+            lock.unlock();
+        }
+    }
+    
+    /**
+     * Returns the set of currently faulted hardware modules.
+     */
+    public Set<String> getFaultedHardware() {
+        lock.lock();
+        try {
+            return new HashSet<>(faultedHardware);
         } finally {
             lock.unlock();
         }

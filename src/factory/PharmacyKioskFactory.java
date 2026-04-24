@@ -1,6 +1,8 @@
 package factory;
 
 import factory.components.*;
+import strategy.PricingStrategy;
+import strategy.StandardPricing;
 
 /**
  * Design Pattern: Abstract Factory (Concrete Factory)
@@ -20,6 +22,12 @@ public class PharmacyKioskFactory implements KioskFactory {
     @Override
     public InventoryPolicy createInventoryPolicy() {
         return new StrictMedicalInventoryPolicy();
+    }
+
+    @Override
+    public PricingStrategy createPricingModule() {
+        // Pharmacy uses standard pricing — no discounts on medications
+        return new StandardPricing();
     }
 
     static class SecureMedicationDispenser implements Dispenser {

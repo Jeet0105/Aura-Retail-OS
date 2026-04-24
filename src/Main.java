@@ -128,14 +128,35 @@ public class Main {
         System.out.println("\n-> Restocking Food Items...");
         foodKiosk.restockItem("CoffeeCup", 40);
         foodKiosk.restockItem("Sandwich", 25);
+        foodKiosk.restockItem("IceCream", 15);
         persistence.recordTransaction("SYSTEM", "CoffeeCup", 40, 0, "RESTOCK");
+        persistence.recordTransaction("SYSTEM", "Sandwich", 25, 0, "RESTOCK");
+        persistence.recordTransaction("SYSTEM", "IceCream", 15, 0, "RESTOCK");
+
+        // Set up hardware dependency constraint (4.2c)
+        foodInventory.setHardwareDependency("IceCream", "RefrigerationUnit-1");
+        foodInventory.setHardwareDependency("Sandwich", "RefrigerationUnit-1");
 
         System.out.println("\n-> Purchase with Discounted Pricing (10% off)");
         foodKiosk.purchaseItem("User789", "CoffeeCup", 2, 5.0);
         persistence.recordTransaction("User789", "CoffeeCup", 2, 9.0, "SUCCESS");
 
+        System.out.println("\n-> Delayed Hardware Response Scenario (Section 5.1.3b)");
+        foodKiosk.simulateDelayedPurchase("User101", "Sandwich", 1, 8.0);
+        persistence.recordTransaction("User101", "Sandwich", 1, 7.2, "SUCCESS_DELAYED");
+
+        System.out.println("\n-> Hardware Dependency Constraint Scenario (Section 4.2c)");
+        System.out.println("Reporting hardware fault: RefrigerationUnit-1");
+        foodInventory.reportHardwareFault("RefrigerationUnit-1");
+        System.out.println("Attempting to purchase IceCream (requires refrigeration)...");
+        foodKiosk.purchaseItem("User202", "IceCream", 1, 4.0);
+        System.out.println("Attempting to purchase CoffeeCup (does NOT require refrigeration)...");
+        foodKiosk.purchaseItem("User202", "CoffeeCup", 1, 5.0);
+        System.out.println("Clearing hardware fault: RefrigerationUnit-1");
+        foodInventory.clearHardwareFault("RefrigerationUnit-1");
+
         System.out.println("\n-> Low Stock Event Trigger");
-        foodInventory.reduceStock("Sandwich", 24); // Leave 1 item
+        foodInventory.reduceStock("Sandwich", 23); // Leave 1 item
         bus.publish(new LowStockEvent("Sandwich", 1, 5));
 
         // ========== EMERGENCY RELIEF KIOSK TEST ==========

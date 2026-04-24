@@ -43,14 +43,18 @@ public class KioskInterface {
     }
     
     public void simulateFailingPurchase(String userId, String productId, int amount, double basePrice) {
-        purchaseInternal(userId, productId, amount, basePrice, true);
+        purchaseInternal(userId, productId, amount, basePrice, true, false);
+    }
+
+    public void simulateDelayedPurchase(String userId, String productId, int amount, double basePrice) {
+        purchaseInternal(userId, productId, amount, basePrice, false, true);
     }
 
     public void purchaseItem(String userId, String productId, int amount, double basePrice) {
-        purchaseInternal(userId, productId, amount, basePrice, false);
+        purchaseInternal(userId, productId, amount, basePrice, false, false);
     }
 
-    private void purchaseInternal(String userId, String productId, int amount, double basePrice, boolean simulateFailure) {
+    private void purchaseInternal(String userId, String productId, int amount, double basePrice, boolean simulateFailure, boolean simulateDelayedResponse) {
         System.out.println("\n--- Initializing User Request ---");
         // Behavioral State
         stateContext.purchase();
@@ -79,6 +83,7 @@ public class KioskInterface {
             // Execute Behavioral Command
             PurchaseItemCommand command = new PurchaseItemCommand(inventoryManager, dispenser, productId, amount);
             command.setSimulateHardwareFailure(simulateFailure);
+            command.setSimulateDelayedResponse(simulateDelayedResponse);
             command.execute();
         } else {
             System.out.println("[Facade] Policy or verification failed. Purchase declined.");

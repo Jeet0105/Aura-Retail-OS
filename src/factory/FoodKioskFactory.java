@@ -1,6 +1,8 @@
 package factory;
 
 import factory.components.*;
+import strategy.PricingStrategy;
+import strategy.DiscountedPricing;
 
 /**
  * Design Pattern: Abstract Factory (Concrete Factory)
@@ -20,6 +22,12 @@ public class FoodKioskFactory implements KioskFactory {
     @Override
     public InventoryPolicy createInventoryPolicy() {
         return new PerishableInventoryPolicy();
+    }
+
+    @Override
+    public PricingStrategy createPricingModule() {
+        // Food kiosks offer 10% discount on perishable items
+        return new DiscountedPricing(10);
     }
 
     static class RefrigeratedDispenser implements Dispenser {

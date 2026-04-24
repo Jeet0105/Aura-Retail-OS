@@ -6,6 +6,8 @@ package factory;
  */
 
 import factory.components.*;
+import strategy.PricingStrategy;
+import strategy.EmergencyPricing;
 
 public class EmergencyReliefKioskFactory implements KioskFactory {
     @Override
@@ -21,6 +23,12 @@ public class EmergencyReliefKioskFactory implements KioskFactory {
     @Override
     public InventoryPolicy createInventoryPolicy() {
         return new EmergencyRationInventoryPolicy();
+    }
+
+    @Override
+    public PricingStrategy createPricingModule() {
+        // Emergency kiosks use subsidized pricing during disasters
+        return new EmergencyPricing();
     }
 
     static class BulkDispenser implements Dispenser {
