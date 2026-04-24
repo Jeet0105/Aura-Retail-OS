@@ -67,7 +67,7 @@ Run from the project root:
 if (Test-Path out) { Remove-Item out -Recurse -Force }
 New-Item -ItemType Directory out | Out-Null
 Get-ChildItem -Recurse -Filter *.java src | Select-Object -ExpandProperty FullName | Set-Content sources.txt
-javac -d out @sources.txt
+javac -d out "@sources.txt"
 java -cp out Main
 ```
 
