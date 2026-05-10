@@ -10,7 +10,25 @@ import aura.factory.components.VerificationModule;
 import aura.pricing.EmergencyPricing;
 import aura.pricing.PricingStrategy;
 
-// Design Pattern: Abstract Factory
+/**
+ * ============================================================
+ * DESIGN PATTERNS USED IN THIS FILE
+ * ============================================================
+ *
+ * 1. ABSTRACT FACTORY (Creational)
+ *    - Role      : Concrete Factory for the Emergency Relief kiosk family
+ *    - Intent    : Produces a cohesive set of emergency-specific components:
+ *                    - BaseDispenser configured as "Bulk Relief Dispenser"
+ *                    - RationIdentityVerification (inner class, requires
+ *                      userId ≥ 3 chars)
+ *                    - EmergencyRationPolicy (caps each purchase at 2 units)
+ *                    - EmergencyPricing (50 % subsidy on base price)
+ *    - Why here  : Emergency kiosk constraints (ration limits, identity
+ *                  checks, subsidised pricing) are fully encapsulated in
+ *                  this factory, leaving the rest of the system unchanged.
+ * ============================================================
+ */
+// Design Pattern: Abstract Factory (Concrete Factory — Emergency Relief)
 public class EmergencyReliefKioskFactory implements KioskFactory {
     @Override
     public KioskType type() {

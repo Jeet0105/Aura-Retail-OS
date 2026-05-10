@@ -12,9 +12,6 @@ target/
 *.swp
 *.swo
 
-# Project specific built files
-sources.txt
-
 # Log files
 *.log
 

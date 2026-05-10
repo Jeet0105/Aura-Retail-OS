@@ -10,7 +10,24 @@ import aura.factory.components.VerificationModule;
 import aura.pricing.DiscountedPricing;
 import aura.pricing.PricingStrategy;
 
-// Design Pattern: Abstract Factory
+/**
+ * ============================================================
+ * DESIGN PATTERNS USED IN THIS FILE
+ * ============================================================
+ *
+ * 1. ABSTRACT FACTORY (Creational)
+ *    - Role      : Concrete Factory for the Food kiosk family
+ *    - Intent    : Produces a cohesive set of food-specific components:
+ *                    - BaseDispenser configured as "Temperature-Aware Food Dispenser"
+ *                    - BasicPaymentVerification (inner class)
+ *                    - BasicInventoryPolicy (standard stock rules)
+ *                    - DiscountedPricing at 5 % (food loyalty discount)
+ *    - Why here  : All food kiosk component decisions are encapsulated
+ *                  here. Switching the food dispenser or pricing strategy
+ *                  requires only a change in this class.
+ * ============================================================
+ */
+// Design Pattern: Abstract Factory (Concrete Factory — Food)
 public class FoodKioskFactory implements KioskFactory {
     @Override
     public KioskType type() {

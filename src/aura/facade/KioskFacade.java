@@ -24,6 +24,32 @@ import aura.state.KioskContext;
 import aura.state.KioskState;
 import java.util.List;
 
+/**
+ * ============================================================
+ * DESIGN PATTERNS USED IN THIS FILE
+ * ============================================================
+ *
+ * 1. FACADE (Structural)
+ *    - Role      : Facade
+ *    - Intent    : Provides a unified, high-level interface (purchaseItem,
+ *                  refundTransaction, restockInventory, diagnostics) to
+ *                  the complex underlying subsystems (Inventory, Hardware,
+ *                  EventBus, FailureChain, Pricing, Commands).
+ *    - Why here  : Simplifies the client (AuraConsoleApp) by shielding
+ *                  it from the intricate coordination required to
+ *                  execute a transaction or gather system health.
+ *
+ * 2. INTEGRATION POINT
+ *    - This class acts as the central hub where almost all other
+ *      patterns converge:
+ *        * Abstract Factory (provides components during construction)
+ *        * State (KioskContext gates operations)
+ *        * Strategy (PricingStrategy calculates final prices)
+ *        * Command & Memento (PurchaseCommand encapsulates the work)
+ *        * Observer (EventBus publishes low stock / failure events)
+ *        * Chain of Responsibility (FailureHandler triggered on errors)
+ * ============================================================
+ */
 // Design Pattern: Facade
 public class KioskFacade {
     private final KioskFactory factory;

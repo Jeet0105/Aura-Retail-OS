@@ -8,6 +8,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * ============================================================
+ * DESIGN PATTERNS USED IN THIS FILE
+ * ============================================================
+ *
+ * 1. OBSERVER (Behavioural)
+ *    - Role      : Subject / Event Bus (publisher side)
+ *    - Intent    : Define a one-to-many dependency so that when one
+ *                  object (e.g. KioskFacade) publishes an event, all
+ *                  registered EventListeners are notified automatically.
+ *    - How       : Listeners register by event-type string via
+ *                  subscribe(). publish() / publishBatch() dispatch
+ *                  events to a snapshot of the listener list so that
+ *                  subscribe/unsubscribe during dispatch is safe.
+ *    - Why here  : Decouples event producers (Facade, UI) from consumers
+ *                  (stock alerts, hardware monitors, emergency handler)
+ *                  without any direct reference between them.
+ *    - Priority  : publishBatch() sorts events by EventPriority.rank()
+ *                  so EMERGENCY events are always dispatched before
+ *                  NORMAL ones regardless of insertion order.
+ *    - Thread-safety: ReentrantReadWriteLock guards the listeners map;
+ *                  dispatch works on a copied snapshot to prevent
+ *                  ConcurrentModificationException.
+ * ============================================================
+ */
 // Design Pattern: Observer
 public class EventBus {
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();

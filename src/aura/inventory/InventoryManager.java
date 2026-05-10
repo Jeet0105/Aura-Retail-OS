@@ -11,7 +11,25 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.ReentrantLock;
 
-// Design Pattern: Memento Originator
+/**
+ * ============================================================
+ * DESIGN PATTERNS USED IN THIS FILE
+ * ============================================================
+ *
+ * 1. MEMENTO (Behavioural) — Originator role
+ *    - Role      : Originator — owns the state that is snapshotted
+ *    - Intent    : saveState() creates and returns an InventoryState
+ *                  (the Memento) containing a deep copy of all current
+ *                  stock. restoreState() replaces the internal map with
+ *                  the snapshot's copy, rolling back any changes.
+ *    - Caretaker : PurchaseCommand saves the state before reserving
+ *                  stock and restores it when a DispenseException occurs.
+ *    - Thread-safety: ReentrantLock guards all reads and writes,
+ *                  ensuring saveState/restoreState are atomic with
+ *                  respect to concurrent purchase threads.
+ * ============================================================
+ */
+// Design Pattern: Memento (Originator)
 public class InventoryManager {
     private final ReentrantLock lock = new ReentrantLock();
     private Map<String, InventoryItem> items = new LinkedHashMap<>();

@@ -13,7 +13,35 @@ import aura.memento.InventoryState;
 import aura.pricing.PricingStrategy;
 import aura.state.KioskState;
 
-// Design Pattern: Command, with Memento rollback
+/**
+ * ============================================================
+ * DESIGN PATTERNS USED IN THIS FILE
+ * ============================================================
+ *
+ * 1. COMMAND (Behavioural)
+ *    - Role      : Concrete Command — "Purchase" operation
+ *    - Intent    : Encapsulates a full purchase transaction (verify user,
+ *                  check policy, reserve stock, dispense item) as a
+ *                  single executable object. KioskFacade creates and
+ *                  invokes it without knowing the details.
+ *    - Parameters: All required collaborators (inventory, hardware,
+ *                  dispenser, verification, policy, pricing, state,
+ *                  userId, product, quantity, flags) are injected via
+ *                  the constructor — the classic Command parameterisation.
+ *
+ * 2. MEMENTO (Behavioural)
+ *    - Role      : Originator (uses InventoryManager as Originator,
+ *                  InventoryState as Memento)
+ *    - Intent    : Before modifying inventory (reserve), a memento of
+ *                  the current InventoryState is saved. If the dispenser
+ *                  throws DispenseException, the memento is restored to
+ *                  roll back all stock changes atomically — no partial
+ *                  state can be observed by other threads.
+ *    - Integration: Command + Memento work together here to implement
+ *                  atomic, undoable transactions.
+ * ============================================================
+ */
+// Design Pattern: Command (Concrete Command) + Memento (rollback)
 public class PurchaseCommand implements TransactionCommand {
     private final InventoryManager inventory;
     private final HardwareRegistry hardware;

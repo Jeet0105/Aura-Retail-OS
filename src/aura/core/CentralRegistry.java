@@ -4,6 +4,27 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+/**
+ * ============================================================
+ * DESIGN PATTERNS USED IN THIS FILE
+ * ============================================================
+ *
+ * 1. SINGLETON (Creational)
+ *    - Role      : Singleton (single shared instance)
+ *    - Intent    : Guarantee that exactly one CentralRegistry instance
+ *                  exists across the entire application, providing a
+ *                  global access point to system-wide configuration.
+ *    - How       : Double-checked locking with a volatile field and a
+ *                  dedicated INSTANCE_LOCK object prevents race
+ *                  conditions during lazy initialization.
+ *    - Why here  : Configuration keys (e.g. "city", "emergency_mode")
+ *                  must be readable and writable from multiple
+ *                  subsystems (Facade, Persistence, UI) without
+ *                  passing the object through every constructor.
+ *    - Thread-safety: ReentrantReadWriteLock allows many concurrent
+ *                  readers while serialising writers.
+ * ============================================================
+ */
 // Design Pattern: Singleton
 public final class CentralRegistry {
     private static volatile CentralRegistry instance;

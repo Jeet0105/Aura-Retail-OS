@@ -10,7 +10,26 @@ import aura.factory.components.VerificationModule;
 import aura.pricing.PricingStrategy;
 import aura.pricing.StandardPricing;
 
-// Design Pattern: Abstract Factory
+/**
+ * ============================================================
+ * DESIGN PATTERNS USED IN THIS FILE
+ * ============================================================
+ *
+ * 1. ABSTRACT FACTORY (Creational)
+ *    - Role      : Concrete Factory for the Pharmacy kiosk family
+ *    - Intent    : Produces a cohesive set of pharmacy-specific
+ *                  components that are guaranteed to work together:
+ *                    - BaseDispenser configured as "Secure Medication Dispenser"
+ *                    - PrescriptionVerification (inner class)
+ *                    - BasicInventoryPolicy (standard stock rules)
+ *                    - StandardPricing (full-price medication)
+ *    - Why here  : All pharmacy component decisions (which dispenser,
+ *                  which verifier, which pricing) are centralised here.
+ *                  KioskFacade and other clients only depend on the
+ *                  KioskFactory interface, not on this class.
+ * ============================================================
+ */
+// Design Pattern: Abstract Factory (Concrete Factory — Pharmacy)
 public class PharmacyKioskFactory implements KioskFactory {
     @Override
     public KioskType type() {

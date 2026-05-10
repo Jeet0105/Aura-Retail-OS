@@ -4,7 +4,30 @@ import aura.domain.InventoryItem;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-// Design Pattern: Memento
+/**
+ * ============================================================
+ * DESIGN PATTERNS USED IN THIS FILE
+ * ============================================================
+ *
+ * 1. MEMENTO (Behavioural)
+ *    - Role      : Memento (the stored snapshot object)
+ *    - Intent    : Captures a deep copy of InventoryManager's internal
+ *                  stock map at a specific point in time without
+ *                  exposing the manager's internal representation to
+ *                  external objects.
+ *    - Originator: InventoryManager (calls saveState() / restoreState())
+ *    - Caretaker : PurchaseCommand (holds the InventoryState reference
+ *                  between reserve() and confirmReservation(); discards
+ *                  it on success or passes it back on failure).
+ *    - Deep copy : Constructor deep-copies each InventoryItem via
+ *                  item.copy() so the memento is completely independent
+ *                  of subsequent mutations.
+ *    - Why here  : Transaction atomicity — if dispensing fails mid-way,
+ *                  PurchaseCommand calls InventoryManager.restoreState(before)
+ *                  to undo any reserved-stock change.
+ * ============================================================
+ */
+// Design Pattern: Memento (Memento object)
 public class InventoryState {
     private final Map<String, InventoryItem> items;
 
