@@ -22,3 +22,8 @@ data/
 
 IT620_Project.pdf
 project_analysis.md
+
+diagrams/
+generate_diagrams.py
+Design_Report.md
+plantuml.jar
