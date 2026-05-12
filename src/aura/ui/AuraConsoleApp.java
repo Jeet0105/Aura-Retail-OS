@@ -42,6 +42,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class AuraConsoleApp {
+    private static final int EMERGENCY_RATION_MAX_UNITS = 2;
+
     private final Scanner scanner = new Scanner(System.in);
     private final CentralRegistry registry = CentralRegistry.getInstance();
     private final PersistenceManager persistence = new PersistenceManager();
@@ -116,6 +118,9 @@ public class AuraConsoleApp {
         createKiosk(new FoodKioskFactory());
         createKiosk(new EmergencyReliefKioskFactory());
         activeKiosk = kiosks.get(KioskType.PHARMACY);
+        if ("true".equals(registry.get("emergency_mode", "false"))) {
+            applySystemEmergencyToAllKiosks(true);
+        }
     }
 
     private void registerEvents() {
@@ -127,22 +132,39 @@ public class AuraConsoleApp {
             String nextFlag = wasEmergency ? "false" : "true";
             registry.set("emergency_mode", nextFlag);
             boolean nowEmergency = "true".equals(nextFlag);
-            for (KioskFacade kiosk : kiosks.values()) {
-                if (nowEmergency) {
-                    kiosk.setState(new EmergencyLockdownMode());
-                    kiosk.setPricing(new EmergencyPricing());
-                    kiosk.setInventoryPolicy(new EmergencyRationPolicy(2));
-                } else {
-                    kiosk.restoreFactoryOperationalDefaults();
-                }
-            }
+            applySystemEmergencyToAllKiosks(nowEmergency);
         });
+    }
+
+    private void applySystemEmergencyToAllKiosks(boolean enabled) {
+        for (KioskFacade kiosk : kiosks.values()) {
+            if (enabled) {
+                kiosk.setState(new EmergencyLockdownMode());
+                kiosk.setPricing(new EmergencyPricing());
+                kiosk.setInventoryPolicy(new EmergencyRationPolicy(EMERGENCY_RATION_MAX_UNITS));
+            } else {
+                kiosk.restoreFactoryOperationalDefaults();
+            }
+        }
     }
 
     private void createKiosk(KioskFactory factory) {
         FailureHandler retry = new RetryHandler();
         retry.link(new RecalibrationHandler()).link(new TechnicianAlertHandler());
         kiosks.put(factory.type(), new KioskFacade(factory, inventory, hardware, eventBus, retry));
+    }
+
+    private boolean emergencyRationPurchaseCapActive() {
+        return "true".equals(registry.get("emergency_mode", "false"))
+                || activeKiosk.state() instanceof EmergencyLockdownMode;
+    }
+
+    private void syncActiveKioskInventoryPolicyWithRegistry() {
+        if ("true".equals(registry.get("emergency_mode", "false"))) {
+            activeKiosk.setInventoryPolicy(new EmergencyRationPolicy(EMERGENCY_RATION_MAX_UNITS));
+        } else {
+            activeKiosk.resetInventoryPolicyToFactoryDefault();
+        }
     }
 
     private void dashboard() {
@@ -188,7 +210,8 @@ public class AuraConsoleApp {
             return;
         }
         String userId = readText("User ID");
-        int quantity = readInt("Quantity", 1, 999);
+        int maxPurchaseQty = emergencyRationPurchaseCapActive() ? EMERGENCY_RATION_MAX_UNITS : 999;
+        int quantity = readInt("Quantity", 1, maxPurchaseQty);
         System.out.println("  Pricing preview: " + activeKiosk.pricing().name()
                 + " -> " + ConsoleStyle.money(activeKiosk.pricing().price(product, quantity)));
         TransactionResult result = activeKiosk.purchaseItem(userId, product, quantity, delayed, forceFailure);
@@ -278,12 +301,16 @@ public class AuraConsoleApp {
         }
         if (choice == 1) {
             activeKiosk.setState(new ActiveMode());
+            syncActiveKioskInventoryPolicyWithRegistry();
         } else if (choice == 2) {
             activeKiosk.setState(new PowerSavingMode());
+            syncActiveKioskInventoryPolicyWithRegistry();
         } else if (choice == 3) {
             activeKiosk.setState(new MaintenanceMode());
+            syncActiveKioskInventoryPolicyWithRegistry();
         } else if (choice == 4) {
             activeKiosk.setState(new EmergencyLockdownMode());
+            activeKiosk.setInventoryPolicy(new EmergencyRationPolicy(EMERGENCY_RATION_MAX_UNITS));
         } else {
             System.out.println(activeKiosk.diagnostics());
         }

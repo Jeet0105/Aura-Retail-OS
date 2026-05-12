@@ -101,6 +101,14 @@ public class KioskFacade {
         this.policy = policy;
     }
 
+    /**
+     * Resets only the inventory policy to this kiosk family's factory default,
+     * without changing operational state or pricing.
+     */
+    public void resetInventoryPolicyToFactoryDefault() {
+        this.policy = factory.createInventoryPolicy();
+    }
+
     public void restoreFactoryOperationalDefaults() {
         stateContext.transitionTo(new ActiveMode());
         this.pricing = factory.createDefaultPricing();
