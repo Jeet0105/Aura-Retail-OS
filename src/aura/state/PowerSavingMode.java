@@ -11,9 +11,9 @@ package aura.state;
  *                  still allowed (with potentially delayed hardware),
  *                  but restocking is locked to conserve energy.
  *    - Behaviour : canPurchase() = true, canRestock() = false.
- *    - Demo link : BaseDispenser simulates hardware delay via
- *                  Thread.sleep when delayedHardware=true, modelling
- *                  the slower hardware response of this state.
+ *    - Demo link : delayedHardware() is true so KioskFacade merges
+ *                  this with purchase flags; BaseDispenser sleeps to
+ *                  model slower hardware in this state.
  * ============================================================
  */
 // Design Pattern: State (Concrete State — Power Saving)
@@ -36,5 +36,10 @@ public class PowerSavingMode implements KioskState {
     @Override
     public String operationalNote() {
         return "Purchases allowed with slower hardware response; restock locked.";
+    }
+
+    @Override
+    public boolean delayedHardware() {
+        return true;
     }
 }

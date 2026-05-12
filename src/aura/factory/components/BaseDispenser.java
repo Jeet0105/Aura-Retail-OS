@@ -41,7 +41,7 @@ public class BaseDispenser implements Dispenser {
     public void dispense(Product product, int quantity, boolean delayed, boolean forceFailure) throws DispenseException {
         if (delayed) {
             try {
-                Thread.sleep(450);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 throw new DispenseException("Delayed hardware response interrupted");

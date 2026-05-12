@@ -40,4 +40,9 @@ public class EmergencyLockdownMode implements KioskState {
     public String operationalNote() {
         return "Only ration-safe purchases are allowed; emergency priority is active.";
     }
+
+    @Override
+    public boolean delayedHardware() {
+        return false;
+    }
 }

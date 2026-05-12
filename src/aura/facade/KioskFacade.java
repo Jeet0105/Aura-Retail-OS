@@ -98,8 +98,9 @@ public class KioskFacade {
 
     public TransactionResult purchaseItem(String userId, Product product, int quantity,
                                           boolean delayedHardware, boolean forceFailure) {
+        boolean effectiveDelayed = delayedHardware || stateContext.state().delayedHardware();
         PurchaseCommand command = new PurchaseCommand(inventory, hardware, dispenser, verification, policy,
-                pricing, stateContext.state(), userId, product, quantity, delayedHardware, forceFailure);
+                pricing, stateContext.state(), userId, product, quantity, effectiveDelayed, forceFailure);
         TransactionResult result = command.execute();
         if (result.isSuccess()) {
             int available = inventory.availableStock(product, hardware);

@@ -37,4 +37,8 @@ public class MaintenanceMode implements KioskState {
     public String operationalNote() {
         return "Customer purchases disabled while technicians service the kiosk.";
     }
+    @Override
+    public boolean delayedHardware() {
+        return false;
+    }
 }

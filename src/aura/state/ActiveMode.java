@@ -36,4 +36,9 @@ public class ActiveMode implements KioskState {
     public String operationalNote() {
         return "Normal customer operations enabled.";
     }
+
+    @Override
+    public boolean delayedHardware() {
+        return false;
+    }
 }
