@@ -63,7 +63,7 @@ public class EmergencyReliefKioskFactory implements KioskFactory {
 
         @Override
         public boolean verify(String userId, Product product) {
-            return userId != null && userId.trim().length() >= 3;
+            return userId != null && userId.trim().length() >= 1;
         }
     }
 }

@@ -39,6 +39,6 @@ public class MaintenanceMode implements KioskState {
     }
     @Override
     public boolean delayedHardware() {
-        return false;
+        return true;
     }
 }

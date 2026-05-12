@@ -20,6 +20,7 @@ import aura.hardware.HardwareModule;
 import aura.hardware.HardwareRegistry;
 import aura.inventory.InventoryManager;
 import aura.pricing.PricingStrategy;
+import aura.state.ActiveMode;
 import aura.state.KioskContext;
 import aura.state.KioskState;
 import java.util.List;
@@ -61,7 +62,7 @@ public class KioskFacade {
     private PricingStrategy pricing;
     private final Dispenser dispenser;
     private final VerificationModule verification;
-    private final InventoryPolicy policy;
+    private InventoryPolicy policy;
 
     public KioskFacade(KioskFactory factory, InventoryManager inventory, HardwareRegistry hardware,
                        EventBus eventBus, FailureHandler failureChain) {
@@ -94,6 +95,16 @@ public class KioskFacade {
 
     public void setState(KioskState state) {
         stateContext.transitionTo(state);
+    }
+
+    public void setInventoryPolicy(InventoryPolicy policy) {
+        this.policy = policy;
+    }
+
+    public void restoreFactoryOperationalDefaults() {
+        stateContext.transitionTo(new ActiveMode());
+        this.pricing = factory.createDefaultPricing();
+        this.policy = factory.createInventoryPolicy();
     }
 
     public TransactionResult purchaseItem(String userId, Product product, int quantity,

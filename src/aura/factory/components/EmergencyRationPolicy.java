@@ -13,7 +13,10 @@ import aura.state.KioskState;
  *    - Intent    : Extends BasicInventoryPolicy to add an additional
  *                  per-transaction unit cap (maxQuantity = 2) that
  *                  prevents over-purchasing during emergency operations.
- *                  Created exclusively by EmergencyReliefKioskFactory.
+ *                  Applied to all kiosk families while system emergency
+ *                  mode is active (AuraConsoleApp EMERGENCY_MODE handler);
+ *                  EmergencyReliefKioskFactory also uses it as the default
+ *                  policy for the relief kiosk family.
  *
  * 2. STATE (Behavioural) — indirect participation (via super)
  *    - Inherits the KioskState.canPurchase() delegation from

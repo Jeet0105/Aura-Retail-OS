@@ -18,6 +18,7 @@ import aura.factory.EmergencyReliefKioskFactory;
 import aura.factory.FoodKioskFactory;
 import aura.factory.KioskFactory;
 import aura.factory.PharmacyKioskFactory;
+import aura.factory.components.EmergencyRationPolicy;
 import aura.failure.FailureHandler;
 import aura.failure.RecalibrationHandler;
 import aura.failure.RetryHandler;
@@ -122,10 +123,18 @@ public class AuraConsoleApp {
         eventBus.subscribe("HARDWARE_FAILURE", event -> notice(ConsoleStyle.RED, "HARDWARE", event.message()));
         eventBus.subscribe("EMERGENCY_MODE", event -> {
             notice(ConsoleStyle.RED, "PRIORITY EVENT", event.message());
-            registry.set("emergency_mode", "true");
+            boolean wasEmergency = "true".equals(registry.get("emergency_mode", "false"));
+            String nextFlag = wasEmergency ? "false" : "true";
+            registry.set("emergency_mode", nextFlag);
+            boolean nowEmergency = "true".equals(nextFlag);
             for (KioskFacade kiosk : kiosks.values()) {
-                kiosk.setState(new EmergencyLockdownMode());
-                kiosk.setPricing(new EmergencyPricing());
+                if (nowEmergency) {
+                    kiosk.setState(new EmergencyLockdownMode());
+                    kiosk.setPricing(new EmergencyPricing());
+                    kiosk.setInventoryPolicy(new EmergencyRationPolicy(2));
+                } else {
+                    kiosk.restoreFactoryOperationalDefaults();
+                }
             }
         });
     }

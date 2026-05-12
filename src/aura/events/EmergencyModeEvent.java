@@ -8,10 +8,11 @@ package aura.events;
  * 1. OBSERVER (Behavioural)
  *    - Role      : Concrete Event (notification payload)
  *    - Intent    : Signals all kiosks and subsystems that the system
- *                  has entered emergency mode. The AuraConsoleApp
- *                  subscriber transitions all kiosks to
- *                  EmergencyLockdownMode and switches pricing to
- *                  EmergencyPricing upon receiving this event.
+ *                  is toggling emergency mode (enter or exit). The
+ *                  AuraConsoleApp subscriber applies or clears
+ *                  EmergencyLockdownMode, EmergencyPricing, and
+ *                  EmergencyRationPolicy on every kiosk according to
+ *                  the persisted emergency_mode flag after each event.
  *    - Published by: AuraConsoleApp.emergencyBroadcast() via a
  *                  publishBatch() call that demonstrates priority-ordered
  *                  dispatch.
